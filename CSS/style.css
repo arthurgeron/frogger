@@ -1,0 +1,52 @@
+    body {
+        font-family: Helvetica, sans-serif;
+    }
+    #tetris {
+		font-size: 1.50em;
+		width: 100%;
+        margin: 1em auto;
+        padding: 1em;
+    }
+    #canvas {
+        display: inline-block;
+        vertical-align: top;
+        box-shadow: 5px 5px 5px #999;
+        border: 2px outset #333;
+		width: 250px;
+		height: 500px;
+    }
+    #menu {
+        display: inline-block;
+        vertical-align: top;
+        position: relative;
+		width: 250px;
+		height: 500px;
+    }
+    #menu p {
+        margin: 0.5em 0;
+        text-align: center;
+    }
+    #menu p a {
+        text-decoration: none;
+        color: black;
+    }
+    #upcoming {
+        display: block;
+        margin: 0 auto;
+		width: 200px;
+		height: 200px;
+		margin-right: -500px;
+    }
+    #score {
+        font-weight: bold;
+        vertical-align: middle;
+    }
+    #rows {	
+        font-weight: bold;
+        vertical-align: middle;
+    }
+    #stats {
+        position: absolute;
+        bottom: 0em;
+        right: 1em;
+    }
