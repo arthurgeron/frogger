@@ -25,6 +25,14 @@ function atualizaTeladeJogo() {
     telaDoJogo.clear();
     sapo.speedX = 0;
     sapo.speedY = 0;    
+    carro1.speedX = +10;
+    carro1.novaPos()
+    carro2.speedX = -20;
+    carro2.novaPos()
+    moto.speedX = +30;
+    moto.novaPos()
+    
+         
     if (telaDoJogo.key && telaDoJogo.key == 37) {sapo.speedX = -1; }
     if (telaDoJogo.key && telaDoJogo.key == 39) {sapo.speedX = 1; }
     if (telaDoJogo.key && telaDoJogo.key == 38) {sapo.speedY = -1; }
@@ -43,7 +51,7 @@ function atualizaTeladeJogo() {
 
 
 var telaDoJogo = {
-    //canvas : document.createElement("canvas"),
+    
     canvas: document.getElementById("canvas"),
     
     start : function() {
@@ -69,11 +77,9 @@ var telaDoJogo = {
 
 window.onload = function () {
     
- //function componentes(largura, altura, cor, x, y)   
- 
     carro1 =  new componentes(180, 85, "gray", 60, 65);
-    carro2 =  new componentes(80, 85, "red", 500, 250);
-    moto =  new componentes(80, 30, "blue", 320, 200);
+    carro2 =  new componentes(120, 85, "red", 500, 250);
+    moto =  new componentes(100, 30, "blue", 320, 200);
     
     sapo = new componentes(30, 30, "#006010", 320, 370);
     
@@ -81,6 +87,4 @@ window.onload = function () {
     areasegura2 =  new componentes(640, 32, "green", 0, 370);
     
     telaDoJogo.start();
-
-    
 }
