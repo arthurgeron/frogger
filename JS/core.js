@@ -1,5 +1,6 @@
 var sapo, pontos, vidas;
 var timer = new Date().getTime();//Utilizado para medir e limtiar o tempo entre entradas do usuário
+var veiculos = [];
 var typeOfComponent = {
     Veiculo : 1,
     Sapo : 2,
@@ -16,13 +17,23 @@ function componentes(largura, altura, cor, x, y, tipoDeComponente) {
     this.width = largura;
     this.height = altura;
     this.speedX = 0;
-    this.speedY = 0;    
-    this.x = x;
+    this.speedY = 0;
+    this.tipo = tipoDeComponente;   
+    if(tipoDeComponente == typeOfComponent.Veiculo){
+      this.baseMovementSpeedX = (Math.floor((Math.random() * 5) + 1) + 6) * /*Numero negativo ou positivo para definir a direcao do veiculo aleatoriamente */ (Math.round(Math.random()) * 2 - 1);//random speed between 10 and 20
+      this.x = this.baseMovementSpeedX>0 ? 0 : telaDoJogo.canvas.width;
+    }
+    else{
+      this.x = x;
+    }
+    if(tipoDeComponente == typeOfComponent.Sapo)
+    {
+      this.biggestY = this.initialY;
+    }
     this.y = y;    
     this.initialX = this.x;
     this.initialY = this.y;
-    this.tipo = tipoDeComponente;
-    this.biggestY = this.initialY;
+    
 
     this.atualizar = function() {
         context = telaDoJogo.context;
@@ -85,13 +96,13 @@ function atualizaTeladeJogo() {
     telaDoJogo.clear();
     sapo.speedX = 0;
     sapo.speedY = 0;    
-    carro1.speedX = +10;
-    carro1.novaPos()
-    carro2.speedX = -10;
-    carro2.novaPos()
-    moto.speedX = +11;
-    moto.novaPos()
-    
+
+    for(var i = 0; i < veiculos.length; i++){
+      veiculos[i].speedX = veiculos[i].baseMovementSpeedX;
+      veiculos[i].novaPos();
+      veiculos[i].atualizar();
+    };
+
     if( new Date().getTime() - timer > 150 ){ // Limita o tempo entre entradas do usuário
         if (telaDoJogo.key && telaDoJogo.key == 37) {sapo.speedX = -30; timer =  new Date().getTime();}
         if (telaDoJogo.key && telaDoJogo.key == 39) {sapo.speedX = 30; timer =  new Date().getTime();}
@@ -104,9 +115,6 @@ function atualizaTeladeJogo() {
     
     sapo.atualizar();
 
-    carro1.atualizar()
-    carro2.atualizar()
-    moto.atualizar()
 }
 
 
@@ -187,6 +195,18 @@ function iniciarComponentes(){
     carro2 =  new componentes(120, 85, "red", 600, 250, typeOfComponent.Veiculo);
     moto =  new componentes(100, 30, "blue", 0, 200, typeOfComponent.Veiculo);
     
+    veiculos = [];
+    
+    veiculos.push(new componentes(100, 30, "blue", 0, 80, typeOfComponent.Veiculo));
+    
+    veiculos.push(new componentes(100, 30, "blue", 0, 140, typeOfComponent.Veiculo));
+
+    veiculos.push(new componentes(100, 30, "blue", 0, 200, typeOfComponent.Veiculo));
+
+    veiculos.push(new componentes(100, 30, "blue", 0, 260, typeOfComponent.Veiculo));
+
+    veiculos.push(new componentes(100, 30, "blue", 0, 320, typeOfComponent.Veiculo));
+
     sapo = new componentes(30, 30, "#32CD32", 320, 370, typeOfComponent.Sapo);
     
     areasegura1 =  new componentes(640, 60, "#90EE90", 0, 0, typeOfComponent.Mapa);
