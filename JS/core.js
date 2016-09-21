@@ -49,6 +49,15 @@ function componentes(largura, altura, cor, x, y, tipoDeComponente) {
             context.fillRect(this.x - 5, this.y + 18, 15, 15);
             context.fillRect(this.x + 20, this.y + 18, 15, 15);
         }
+        if (this.tipo == typeOfComponent.Veiculo) { //desenha carro com pneus
+            context.fillStyle = "black";
+            context.fillRect(this.x+10, this.y-10, 20, 10);
+            context.fillRect(this.x+10, this.y+30, 20, 10);
+            context.fillRect(this.x+70, this.y-10, 20, 10);
+            context.fillRect(this.x+70, this.y+30, 20, 10);
+
+        }
+
     }
     this.novaPos = function () {
         if (typeOfComponent.properties[this.tipo].warp) {
@@ -230,12 +239,17 @@ function zerarPontuacao(pontos) {
     numeroFinal += String(temp);
     document.getElementById('score').innerText = numeroFinal;
 }
-
+function randomCores() {
+    var cor = ["red","gray","blue"];
+    corRandom = cor[Math.floor(Math.random()*cor.length)];
+    return corRandom;
+}
+    
 function iniciarComponentes() {
 
 
 
-    sapo = new componentes(30, 30, "#32CD32", 320, (window.innerHeight * 0.8) - 30, typeOfComponent.Sapo);
+    sapo = new componentes(30, 30, "#32CD32", telaDoJogo.canvas.width/2, (window.innerHeight * 0.8) - 30, typeOfComponent.Sapo);//cria o sampo no meio da tela.
 
     areasegura1 = new componentes(telaDoJogo.canvas.width, 60, "#90EE90", 0, 0, typeOfComponent.Mapa);
     areasegura2 = new componentes(telaDoJogo.canvas.width, 32, "#90EE90", 0, telaDoJogo.canvas.height - 32, typeOfComponent.Mapa);
@@ -246,9 +260,9 @@ function iniciarComponentes() {
     veiculos = [];
     while (true) {
 
-        veiculos.push(new componentes(100, 30, "blue", 0, posicionadorVeiculos, typeOfComponent.Veiculo));
+        veiculos.push(new componentes(100, 30, randomCores(), 0, posicionadorVeiculos, typeOfComponent.Veiculo));
 
-        if (posicionadorVeiculos + espacamento >= telaDoJogo.canvas.height - areasegura2.height) {
+        if (posicionadorVeiculos + espacamento >= telaDoJogo.canvas.height - 40) {//resolve o problema do carro vindo por dentro da área segura.
             return;
         } else {
             posicionadorVeiculos += espacamento;
