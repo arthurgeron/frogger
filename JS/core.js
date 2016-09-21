@@ -46,7 +46,8 @@ function componentes(largura, altura, cor, x, y, tipoDeComponente) {
             else{
                 this.y += this.speedY;
             }
-            if(sapo.x === this.x && sapo.y === this.y){
+            //Detectar colisoes
+            if((sapo.x >= this.x && sapo.x <= this.x + this.width ) && (sapo.y >= this.y && sapo.y <= this.y + this.height) ){
                     perder();
             }
         }
