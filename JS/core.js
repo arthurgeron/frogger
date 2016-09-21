@@ -26,14 +26,13 @@ function componentes(largura, altura, cor, x, y, tipoDeComponente) {
     else{
       this.x = x;
     }
-    if(tipoDeComponente == typeOfComponent.Sapo)
-    {
-      this.biggestY = this.initialY;
-    }
     this.y = y;    
     this.initialX = this.x;
     this.initialY = this.y;
-    
+    if(this.tipo == typeOfComponent.Sapo)
+    {
+      this.biggestY = this.initialY;
+    }
 
     this.atualizar = function() {
         context = telaDoJogo.context;
