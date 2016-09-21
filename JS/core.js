@@ -235,7 +235,7 @@ function iniciarComponentes() {
 
 
 
-    sapo = new componentes(30, 30, "#32CD32", 320, (window.innerHeight * 0.8) - 30, typeOfComponent.Sapo);
+    sapo = new componentes(30, 30, "#32CD32", telaDoJogo.canvas.width/2, (window.innerHeight * 0.8) - 30, typeOfComponent.Sapo);//cria o sampo no meio da tela.
 
     areasegura1 = new componentes(telaDoJogo.canvas.width, 60, "#90EE90", 0, 0, typeOfComponent.Mapa);
     areasegura2 = new componentes(telaDoJogo.canvas.width, 32, "#90EE90", 0, telaDoJogo.canvas.height - 32, typeOfComponent.Mapa);
@@ -248,7 +248,7 @@ function iniciarComponentes() {
 
         veiculos.push(new componentes(100, 30, "blue", 0, posicionadorVeiculos, typeOfComponent.Veiculo));
 
-        if (posicionadorVeiculos + espacamento >= telaDoJogo.canvas.height - areasegura2.height) {
+        if (posicionadorVeiculos + espacamento >= telaDoJogo.canvas.height - 40) {//resolve o problema do carro vindo por dentro da área segura.
             return;
         } else {
             posicionadorVeiculos += espacamento;
