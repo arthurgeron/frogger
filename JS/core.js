@@ -1,6 +1,7 @@
 var sapo, pontos, vidas;
 var timer = new Date().getTime();//Utilizado para medir e limtiar o tempo entre entradas do usuário
 var veiculos = [];
+var blockSize; //Tamanho de bloco definido de acordo com o tamanho da janela
 var typeOfComponent = {
     Veiculo : 1,
     Sapo : 2,
@@ -123,9 +124,11 @@ var telaDoJogo = {
     
     start : function() {
         this.context = this.canvas.getContext("2d");
-        this.canvas.width = 640;
-        this.canvas.height = 400;
-        
+        //Define o tamanho do canvas dinamicamente, sendo o tamanho minimo 640 por 400
+        this.canvas.width = window.innerWidth < 640? 640 : window.innerWidth * 0.95;
+        this.canvas.height = window.innerHeight < 400 ? 400 : window.innerHeight * 0.8;
+        //Inicia os componentes, eles precisam ser iniciados aqui porque utilizando calculos baseados no tamanho do canvas
+        iniciarComponentes();
         document.body.insertBefore(this.canvas, document.body.childNodes[0]);
         this.interval = setInterval(atualizaTeladeJogo, 20);
         
@@ -164,7 +167,9 @@ function reiniciarJogo(zerarPontos){
 
 function exibirMensagem(mensagem){
     document.getElementById('Mensagem').innerText = mensagem;
-    document.getElementById('Mensagem').setAttribute('visible',true);
+    //Animacao
+    document.getElementById('Mensagem').className = "animate";
+    setTimeout(function(){document.getElementById('Mensagem').className = document.getElementById('Mensagem').className = "";},1000);
 }
 
 function adicionarPontuacao(pontos){
@@ -176,6 +181,9 @@ function adicionarPontuacao(pontos){
     }
     numeroFinal += String(temp);
     document.getElementById('score').innerText = numeroFinal;
+    //Animacao
+    document.getElementById('score').className = " animate";
+    setTimeout(function(){document.getElementById('score').className = document.getElementById('score').className = "";},500);
 }
 
 function zerarPontuacao(pontos){
@@ -190,31 +198,33 @@ function zerarPontuacao(pontos){
 }
 
 function iniciarComponentes(){
-    carro1 =  new componentes(180, 85, "black", 0, 65, typeOfComponent.Veiculo);
-    carro2 =  new componentes(120, 85, "red", 600, 250, typeOfComponent.Veiculo);
-    moto =  new componentes(100, 30, "blue", 0, 200, typeOfComponent.Veiculo);
     
+    
+
+    sapo = new componentes(30, 30, "#32CD32", 320, (window.innerHeight * 0.8) - 30, typeOfComponent.Sapo);
+    
+    areasegura1 =  new componentes(telaDoJogo.canvas.width, 60, "#90EE90", 0, 0, typeOfComponent.Mapa);
+    areasegura2 =  new componentes(telaDoJogo.canvas.width, 32, "#90EE90", 0, telaDoJogo.canvas.height - 32, typeOfComponent.Mapa);
+    
+    //Gera veiculos dinamicamente de acordo com o espaco disponivel
+    var posicionadorVeiculos = areasegura1.height + 30;
+    var espacamento = 60;
     veiculos = [];
+    while(true){
+
+        veiculos.push(new componentes(100, 30, "blue", 0, posicionadorVeiculos, typeOfComponent.Veiculo));
     
-    veiculos.push(new componentes(100, 30, "blue", 0, 80, typeOfComponent.Veiculo));
-    
-    veiculos.push(new componentes(100, 30, "blue", 0, 140, typeOfComponent.Veiculo));
-
-    veiculos.push(new componentes(100, 30, "blue", 0, 200, typeOfComponent.Veiculo));
-
-    veiculos.push(new componentes(100, 30, "blue", 0, 260, typeOfComponent.Veiculo));
-
-    veiculos.push(new componentes(100, 30, "blue", 0, 320, typeOfComponent.Veiculo));
-
-    sapo = new componentes(30, 30, "#32CD32", 320, 370, typeOfComponent.Sapo);
-    
-    areasegura1 =  new componentes(640, 60, "#90EE90", 0, 0, typeOfComponent.Mapa);
-    areasegura2 =  new componentes(640, 32, "#90EE90", 0, 370, typeOfComponent.Mapa);
+        if(posicionadorVeiculos + espacamento >= telaDoJogo.canvas.height - areasegura2.height){
+            return;
+        }
+        else{
+          posicionadorVeiculos += espacamento;
+        }
+    }
 }
 
 window.onload = function () {
     
-    iniciarComponentes();
     
     telaDoJogo.start();
 }
