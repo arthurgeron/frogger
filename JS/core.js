@@ -28,6 +28,11 @@ function componentes(largura, altura, cor, x, y, tipoDeComponente) {
         context = telaDoJogo.context;
         context.fillStyle = cor;
         context.fillRect(this.x, this.y, this.width, this.height);
+        if(this.tipo == typeOfComponent.Sapo){ //desenha o sapo
+            context.fillRect(this.x-3, this.y-4, 37, 20);
+            context.fillRect(this.x-5, this.y+18, 15,15);
+            context.fillRect(this.x+20, this.y+18, 15,15);
+        }
     }
     this.novaPos = function() {
         if(typeOfComponent.properties[this.tipo].warp){
@@ -56,7 +61,7 @@ function componentes(largura, altura, cor, x, y, tipoDeComponente) {
             {
                 this.x += this.speedX;
             }
-            if(this.y + this.speedY < telaDoJogo.canvas.height && this.y + this.speedY > 0 )//Limita o movimento do sapo a area do mapa
+            if(this.y + this.speedY < telaDoJogo.canvas.height && this.y + this.speedY > 0)  //Limita o movimento do sapo a area do mapa
             {
                 this.y += this.speedY;
                 if(this.y < this.biggestY){
@@ -64,9 +69,10 @@ function componentes(largura, altura, cor, x, y, tipoDeComponente) {
                     adicionarPontuacao(10);
                 }
             }
-            else{ // Caso ele atinja a parte superior do mapa vence o jogo
+            else if (this.y <=30 ){// Caso ele atinja a parte superior do mapa vence o jogo
                 vencer(); //Venceu a fase
             }
+
         }
         else{
             this.x += this.speedX;
@@ -83,7 +89,7 @@ function atualizaTeladeJogo() {
     carro1.novaPos()
     carro2.speedX = -10;
     carro2.novaPos()
-    moto.speedX = +10;
+    moto.speedX = +11;
     moto.novaPos()
     
     if( new Date().getTime() - timer > 150 ){ // Limita o tempo entre entradas do usuário
