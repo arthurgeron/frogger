@@ -1,12 +1,12 @@
     body {
         font-family: Helvetica, sans-serif;
     }
-    #score {
+    .score {
         font-size: xx-large;
         animation: all 0.5s;
 	    transition: all 0.5s;
     }
-    #score.animate {
+    .score.animate {
         color: orangered;
 	    font-size: 65px;
 	

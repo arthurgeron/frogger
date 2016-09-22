@@ -180,6 +180,7 @@ function vencer() {
 
 function perder() {
     exibirMensagem('Perdeu!');
+    definirHighScore();
     reiniciarJogo(true);
 }
 
@@ -213,32 +214,37 @@ function exibirMensagem(mensagem) {
     }, 1000);
 }
 
-function adicionarPontuacao(pontos) {
-    var temp = parseInt(document.getElementById('score').innerText) + parseInt(pontos);
+function adicionarFormatarPontuacao(pontos, nomeElemento){
+    var temp = nomeElemento === '' ? 0 : parseInt(document.getElementById(nomeElemento).innerText) + parseInt(pontos);
     var comprimentoFaltanteNumero = 5 - String(temp).length;
     var numeroFinal = '';
     for (i = 0; i < comprimentoFaltanteNumero; i++) {
         numeroFinal += '0';
     }
-    numeroFinal += String(temp);
+    return numeroFinal + String(temp);
+}
+
+function adicionarPontuacao(pontos) {
+    var numeroFinal = adicionarFormatarPontuacao(pontos, 'score');
     document.getElementById('score').innerText = numeroFinal;
     //Animacao
-    document.getElementById('score').className = " animate";
+    document.getElementById('score').className += " animate";
     setTimeout(function () {
-        document.getElementById('score').className = document.getElementById('score').className = "";
+        document.getElementById('score').className = document.getElementById('score').className.replace(' animate','');
     }, 500);
 }
 
 function zerarPontuacao(pontos) {
-    var temp = 0;
-    var comprimentoFaltanteNumero = 5 - String(temp).length;
-    var numeroFinal = '';
-    for (i = 0; i < comprimentoFaltanteNumero; i++) {
-        numeroFinal += '0';
-    }
-    numeroFinal += String(temp);
+    var numeroFinal = adicionarFormatarPontuacao(0,'');
     document.getElementById('score').innerText = numeroFinal;
 }
+
+function definirHighScore(){
+    var numeroFinal = adicionarFormatarPontuacao(0,'score');
+    if(parseInt(numeroFinal) > parseInt(adicionarFormatarPontuacao(0,'highScore'))) 
+        document.getElementById('highScore').innerText = numeroFinal;
+}
+
 function randomCores() {
     var cor = ["red","gray","blue"];
     corRandom = cor[Math.floor(Math.random()*cor.length)];
