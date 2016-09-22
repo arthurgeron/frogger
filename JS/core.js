@@ -1,7 +1,6 @@
 var sapo, pontos, vidas;
 var timer = new Date().getTime(); //Utilizado para medir e limtiar o tempo entre entradas do usuário
 var veiculos = [];
-var blockSize; //Tamanho de bloco definido de acordo com o tamanho da janela
 
 var typeOfComponent = {
     Veiculo: 1,
@@ -180,7 +179,6 @@ function vencer() {
 
 function perder() {
     exibirMensagem('Perdeu!');
-    definirHighScore();
     reiniciarJogo(true);
 }
 
@@ -232,6 +230,7 @@ function adicionarPontuacao(pontos) {
     setTimeout(function () {
         document.getElementById('score').className = document.getElementById('score').className.replace(' animate','');
     }, 500);
+    definirHighScore();
 }
 
 function zerarPontuacao(pontos) {
