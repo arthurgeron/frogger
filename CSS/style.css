@@ -18,10 +18,10 @@
     }
     #Mensagem.animate{
         position: fixed;
-        margin-top: -50%;
-        margin-left: 40%;
+        top: 25%;
+        left: 40%;
         display: block;
-        font-size: -webkit-xxx-large;
+        font-size: 500%;
         background-color: rgba(255,200,255,0.9);
         color: red;
     }
