@@ -1,5 +1,5 @@
 var sapo;
-var vidas = 3;
+var vidas;
 var inputTimer ; //Utilizado para medir e limtiar o tempo entre entradas do usuário
 var timer;
 var veiculos = [];
@@ -29,7 +29,7 @@ function componentes(largura, altura, cor, x, y, tipoDeComponente) {
     this.speedY = 0;
     this.tipo = tipoDeComponente;
     if (tipoDeComponente == typeOfComponent.Veiculo) {
-        this.baseMovementSpeedX = (Math.floor((Math.random() * 5) + 1) + 6) * /*Numero negativo ou positivo para definir a direcao do veiculo aleatoriamente */ (Math.round(Math.random()) * 2 - 1); //random speed between 10 and 20
+        this.baseMovementSpeedX = (Math.floor((Math.random() * 5) + 1) + 3) * /*Numero negativo ou positivo para definir a direcao do veiculo aleatoriamente */ (Math.round(Math.random()) * 2 - 1); //random speed between 10 and 20
         this.x = this.baseMovementSpeedX > 0 ? 0 : telaDoJogo.canvas.width;
     } else {
         this.x = x;
@@ -119,7 +119,7 @@ function atualizaTeladeJogo() {
         veiculos[i].atualizar();
     };
 
-    if (new Date().getTime() - inputTimer > 150) { // Limita o tempo entre entradas do usuário
+    if (new Date().getTime() - inputTimer > 110) { // Limita o tempo entre entradas do usuário
         if (telaDoJogo.key && telaDoJogo.key == 37) {
             sapo.speedX = -30;
         }
@@ -134,22 +134,18 @@ function atualizaTeladeJogo() {
         }
         inputTimer = new Date().getTime();
         sapo.novaPos();
+        
     }
-    if( (new Date().getTime() - timer ) >  990 && (new Date().getTime() - timer ) < 1100 )
-    {
-        tempo = parseFloat(document.getElementById('Timer').innerText.split(': ')[1]);
-        tempo = Math.round((parseFloat(tempo) - parseInt((new Date().getTime() - timer) / 1000 ) ) * 100 )/100;
-        document.getElementById('Timer').innerText  ="Tempo: "+ String(tempo);
-        document.getElementById('spanProgressBar').setAttribute('style','width: '+String(parseInt(tempo) * 100 / 60)+ '%');
-        timer = new Date().getTime();
-        if(tempo <= 0.01)
-            perder();
-    }
+    
+      
     
     areasegura1.atualizar();
     areasegura2.atualizar();
-
     sapo.atualizar();
+
+    
+
+    atualizarTimer();  
 
 }
 
@@ -180,6 +176,26 @@ var telaDoJogo = {
     }
 }
 
+function atualizarTimer(){
+    var temp = new Date().getTime() - timer + 0.00;
+    if( temp >  990 && temp < 1100 )
+    {
+        tempo = parseFloat(document.getElementById('Timer').innerText.split(': ')[1]);
+        tempo = (parseFloat(tempo) - (temp / 1000 ) );
+        document.getElementById('Timer').innerText  ="Tempo: "+ String(parseInt(tempo));
+        document.getElementById('spanProgressBar').setAttribute('style','width: '+String(parseInt(tempo) * 100 / 60)+ '%');
+        timer = new Date().getTime();
+        if(tempo <= 0.01)
+            perder();
+    }
+}
+
+function resetarTimer(){
+    document.getElementById('Timer').innerText  ="Tempo: 60";
+    document.getElementById('spanProgressBar').setAttribute('style','width: 100%');
+    timer = new Date().getTime();
+}
+
 function vencer() {
     exibirMensagem('Venceu!');
     adicionarPontuacao(100);
@@ -189,13 +205,11 @@ function vencer() {
 
 function perder() {
     removerVidas();
-    exibirMensagem('Perdeu!');
     reiniciarJogo(false);
 }
+
 function gameover() {
-    exibirMensagem('FIM DE JOGO!');
-    removerVidas();
-    vidas = 3;
+    exibirMensagem('Fim De Jogo!');
     reiniciarJogo(true);
 }
 
@@ -263,6 +277,9 @@ function removerVidas(){
     setTimeout(function () {
         document.getElementById('vidas').className = document.getElementById('vidas').className.replace(' animate','');
     }, 500);
+
+    if(vidas == 0)
+        gameover();
 }
 function zerarPontuacao(pontos) {
     var numeroFinal = adicionarFormatarPontuacao(0,'');
@@ -282,32 +299,34 @@ function randomCores() {
 }
     
 function iniciarComponentes() {
-    if (vidas > 0){
-        inputTimer = timer = new Date().getTime();
-        document.getElementById('vidas').innerText = vidas;
 
-        sapo = new componentes(30, 30, "#32CD32", telaDoJogo.canvas.width/2, (window.innerHeight * 0.8) - 30, typeOfComponent.Sapo);//cria o sampo no meio da tela.
+    var numeroInicialDeVidas = 3;
+    
+    if(vidas === undefined || vidas === 0)
+        vidas = numeroInicialDeVidas
+    
+    inputTimer =  new Date().getTime();
+    resetarTimer();
+    document.getElementById('vidas').innerText = vidas;
 
-        areasegura1 = new componentes(telaDoJogo.canvas.width, 60, "#90EE90", 0, 0, typeOfComponent.Mapa);
-        areasegura2 = new componentes(telaDoJogo.canvas.width, 32, "#90EE90", 0, telaDoJogo.canvas.height - 32, typeOfComponent.Mapa);
+    sapo = new componentes(30, 30, "#32CD32", telaDoJogo.canvas.width/2, (window.innerHeight * 0.8) - 30, typeOfComponent.Sapo);//cria o sampo no meio da tela.
 
-        //Gera veiculos dinamicamente de acordo com o espaco disponivel
-        var posicionadorVeiculos = areasegura1.height + 30;
-        var espacamento = 60;
-        veiculos = [];
-        while (true) {
+    areasegura1 = new componentes(telaDoJogo.canvas.width, 60, "#90EE90", 0, 0, typeOfComponent.Mapa);
+    areasegura2 = new componentes(telaDoJogo.canvas.width, 32, "#90EE90", 0, telaDoJogo.canvas.height - 32, typeOfComponent.Mapa);
 
-            veiculos.push(new componentes(100, 30, randomCores(), 0, posicionadorVeiculos, typeOfComponent.Veiculo));
+    //Gera veiculos dinamicamente de acordo com o espaco disponivel
+    var posicionadorVeiculos = areasegura1.height + 30;
+    var espacamento = 60;
+    veiculos = [];
+    while (true) {
 
-            if (posicionadorVeiculos + espacamento + veiculos[0].height + 10 >= telaDoJogo.canvas.height - 40) {//resolve o problema do carro vindo por dentro da área segura.
-                return;
-            } else {
-                posicionadorVeiculos += espacamento;
-            }
+        veiculos.push(new componentes(100, 30, randomCores(), 0, posicionadorVeiculos, typeOfComponent.Veiculo));
+
+        if (posicionadorVeiculos + espacamento + veiculos[0].height + 10 >= telaDoJogo.canvas.height - 40) {//resolve o problema do carro vindo por dentro da área segura.
+            return;
+        } else {
+            posicionadorVeiculos += espacamento;
         }
-    }
-    else{
-        gameover();
     }
 }
 
