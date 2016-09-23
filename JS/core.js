@@ -1,4 +1,5 @@
-var sapo, pontos, vidas;
+var sapo;
+var vidas = 3;
 var timer = new Date().getTime(); //Utilizado para medir e limtiar o tempo entre entradas do usuário
 var veiculos = [];
 
@@ -178,7 +179,14 @@ function vencer() {
 }
 
 function perder() {
+    removerVidas();
     exibirMensagem('Perdeu!');
+    reiniciarJogo(false);
+}
+function gameover() {
+    exibirMensagem('FIM DE JOGO!');
+    removerVidas();
+    vidas = 3;
     reiniciarJogo(true);
 }
 
@@ -238,6 +246,15 @@ function adicionarPontuacao(pontos) {
     definirHighScore();
 }
 
+function removerVidas(){
+    vidas -= 1
+    document.getElementById('vidas').innerText = vidas;
+    //Animacao
+    document.getElementById('vidas').className += " animate";
+    setTimeout(function () {
+        document.getElementById('vidas').className = document.getElementById('vidas').className.replace(' animate','');
+    }, 500);
+}
 function zerarPontuacao(pontos) {
     var numeroFinal = adicionarFormatarPontuacao(0,'');
     document.getElementById('score').innerText = numeroFinal;
@@ -256,32 +273,35 @@ function randomCores() {
 }
     
 function iniciarComponentes() {
+    if (vidas > 0){
+        document.getElementById('vidas').innerText = vidas;
 
+        sapo = new componentes(30, 30, "#32CD32", telaDoJogo.canvas.width/2, (window.innerHeight * 0.8) - 30, typeOfComponent.Sapo);//cria o sampo no meio da tela.
 
+        areasegura1 = new componentes(telaDoJogo.canvas.width, 60, "#90EE90", 0, 0, typeOfComponent.Mapa);
+        areasegura2 = new componentes(telaDoJogo.canvas.width, 32, "#90EE90", 0, telaDoJogo.canvas.height - 32, typeOfComponent.Mapa);
 
-    sapo = new componentes(30, 30, "#32CD32", telaDoJogo.canvas.width/2, (window.innerHeight * 0.8) - 30, typeOfComponent.Sapo);//cria o sampo no meio da tela.
+        //Gera veiculos dinamicamente de acordo com o espaco disponivel
+        var posicionadorVeiculos = areasegura1.height + 30;
+        var espacamento = 60;
+        veiculos = [];
+        while (true) {
 
-    areasegura1 = new componentes(telaDoJogo.canvas.width, 60, "#90EE90", 0, 0, typeOfComponent.Mapa);
-    areasegura2 = new componentes(telaDoJogo.canvas.width, 32, "#90EE90", 0, telaDoJogo.canvas.height - 32, typeOfComponent.Mapa);
+            veiculos.push(new componentes(100, 30, randomCores(), 0, posicionadorVeiculos, typeOfComponent.Veiculo));
 
-    //Gera veiculos dinamicamente de acordo com o espaco disponivel
-    var posicionadorVeiculos = areasegura1.height + 30;
-    var espacamento = 60;
-    veiculos = [];
-    while (true) {
-
-        veiculos.push(new componentes(100, 30, randomCores(), 0, posicionadorVeiculos, typeOfComponent.Veiculo));
-
-        if (posicionadorVeiculos + espacamento + veiculos[0].height + 10 >= telaDoJogo.canvas.height - 40) {//resolve o problema do carro vindo por dentro da área segura.
-            return;
-        } else {
-            posicionadorVeiculos += espacamento;
+            if (posicionadorVeiculos + espacamento + veiculos[0].height + 10 >= telaDoJogo.canvas.height - 40) {//resolve o problema do carro vindo por dentro da área segura.
+                return;
+            } else {
+                posicionadorVeiculos += espacamento;
+            }
         }
+    }
+    else{
+        gameover();
     }
 }
 
 window.onload = function () {
-
 
     telaDoJogo.start();
 }
