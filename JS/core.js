@@ -1,6 +1,6 @@
 var sapo;
 var vidas = 3;
-var timer = new Date().getTime(); //Utilizado para medir e limtiar o tempo entre entradas do usuário
+var inputTimer ; //Utilizado para medir e limtiar o tempo entre entradas do usuário
 var veiculos = [];
 
 var typeOfComponent = {
@@ -108,6 +108,7 @@ function componentes(largura, altura, cor, x, y, tipoDeComponente) {
 }
 
 function atualizaTeladeJogo() {
+    var timer;
     telaDoJogo.clear();
     sapo.speedX = 0;
     sapo.speedY = 0;
@@ -118,25 +119,29 @@ function atualizaTeladeJogo() {
         veiculos[i].atualizar();
     };
 
-    if (new Date().getTime() - timer > 150) { // Limita o tempo entre entradas do usuário
+    if (new Date().getTime() - inputTimer > 150) { // Limita o tempo entre entradas do usuário
         if (telaDoJogo.key && telaDoJogo.key == 37) {
             sapo.speedX = -30;
-            timer = new Date().getTime();
         }
         if (telaDoJogo.key && telaDoJogo.key == 39) {
             sapo.speedX = 30;
-            timer = new Date().getTime();
         }
         if (telaDoJogo.key && telaDoJogo.key == 38) {
             sapo.speedY = -30;
-            timer = new Date().getTime();
         }
         if (telaDoJogo.key && telaDoJogo.key == 40) {
             sapo.speedY = 30;
-            timer = new Date().getTime();
         }
+        inputTimer = new Date().getTime();
         sapo.novaPos();
     }
+    
+    tempo = parseFloat(document.getElementById('Timer').innerText.split(': ')[1];
+    document.getElementById('Timer').innerText  ="Tempo: "+ String(parseFloat(tempo) - 0.01);
+    document.getElementById('spanProgressBar').setAttribute('style','width: '+String(parseInt(tempo) * 100 / 60)+ '%');
+    if(tempo <= 0.01)
+        perder();
+    
     areasegura1.atualizar();
     areasegura2.atualizar();
 
@@ -274,6 +279,7 @@ function randomCores() {
     
 function iniciarComponentes() {
     if (vidas > 0){
+        inputTimer = new Date().getTime();
         document.getElementById('vidas').innerText = vidas;
 
         sapo = new componentes(30, 30, "#32CD32", telaDoJogo.canvas.width/2, (window.innerHeight * 0.8) - 30, typeOfComponent.Sapo);//cria o sampo no meio da tela.
