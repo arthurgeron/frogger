@@ -1,6 +1,7 @@
 var sapo;
 var vidas = 3;
 var inputTimer ; //Utilizado para medir e limtiar o tempo entre entradas do usuário
+var timer;
 var veiculos = [];
 
 var typeOfComponent = {
@@ -108,7 +109,6 @@ function componentes(largura, altura, cor, x, y, tipoDeComponente) {
 }
 
 function atualizaTeladeJogo() {
-    var timer;
     telaDoJogo.clear();
     sapo.speedX = 0;
     sapo.speedY = 0;
@@ -135,12 +135,16 @@ function atualizaTeladeJogo() {
         inputTimer = new Date().getTime();
         sapo.novaPos();
     }
-    
-    tempo = parseFloat(document.getElementById('Timer').innerText.split(': ')[1];
-    document.getElementById('Timer').innerText  ="Tempo: "+ String(parseFloat(tempo) - 0.01);
-    document.getElementById('spanProgressBar').setAttribute('style','width: '+String(parseInt(tempo) * 100 / 60)+ '%');
-    if(tempo <= 0.01)
-        perder();
+    if( (new Date().getTime() - timer ) >  990 && (new Date().getTime() - timer ) < 1100 )
+    {
+        tempo = parseFloat(document.getElementById('Timer').innerText.split(': ')[1]);
+        tempo = Math.round((parseFloat(tempo) - parseInt((new Date().getTime() - timer) / 1000 ) ) * 100 )/100;
+        document.getElementById('Timer').innerText  ="Tempo: "+ String(tempo);
+        document.getElementById('spanProgressBar').setAttribute('style','width: '+String(parseInt(tempo) * 100 / 60)+ '%');
+        timer = new Date().getTime();
+        if(tempo <= 0.01)
+            perder();
+    }
     
     areasegura1.atualizar();
     areasegura2.atualizar();
@@ -279,7 +283,7 @@ function randomCores() {
     
 function iniciarComponentes() {
     if (vidas > 0){
-        inputTimer = new Date().getTime();
+        inputTimer = timer = new Date().getTime();
         document.getElementById('vidas').innerText = vidas;
 
         sapo = new componentes(30, 30, "#32CD32", telaDoJogo.canvas.width/2, (window.innerHeight * 0.8) - 30, typeOfComponent.Sapo);//cria o sampo no meio da tela.
