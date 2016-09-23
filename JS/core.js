@@ -192,11 +192,16 @@ function reiniciarJogo(zerarPontos) {
 }
 //Funcao para deteccao de colisao entre dois objetos
 function verificarColisao(objeto1, objeto2) {
+    var object2extraYPixels;
+    if(objeto2.tipo === typeOfComponent.Veiculo){
+        //inclui na conta o tamanho das rodas
+        object2extraYPixels = 10;
+    }
+    else{
+        object2extraYPixels = 0;
+    }
     //Verifica colisao na parte superior do objeto
-    if ((objeto1.x >= objeto2.x && objeto1.x <= objeto2.x + objeto2.width) && (objeto1.y >= objeto2.y && objeto1.y <= objeto2.y + objeto2.height))
-        return true;
-    //Verifica colisao na parte inferior do objeto
-    else if ((objeto1.x + objeto1.width >= objeto2.x && objeto1.x + objeto1.width <= objeto2.x + objeto2.width) && (objeto1.y + objeto1.height >= objeto2.y && objeto1.y + objeto1.height <= objeto2.y + objeto2.height))
+    if (((objeto1.x >= objeto2.x && objeto1.x <= objeto2.x + objeto2.width) || (objeto1.x + objeto1.width >= objeto2.x && objeto1.x + objeto1.width <= objeto2.x + objeto2.width) ) && ((objeto1.y >= objeto2.y && objeto1.y <= objeto2.y + objeto2.height + object2extraYPixels ) || (objeto1.y + objeto1.height >= objeto2.y && objeto1.y + objeto1.height <= objeto2.y + objeto2.height + object2extraYPixels ) ) )
         return true;
     else
         return false;
@@ -267,7 +272,7 @@ function iniciarComponentes() {
 
         veiculos.push(new componentes(100, 30, randomCores(), 0, posicionadorVeiculos, typeOfComponent.Veiculo));
 
-        if (posicionadorVeiculos + espacamento >= telaDoJogo.canvas.height - 40) {//resolve o problema do carro vindo por dentro da área segura.
+        if (posicionadorVeiculos + espacamento + veiculos[0].height + 10 >= telaDoJogo.canvas.height - 40) {//resolve o problema do carro vindo por dentro da área segura.
             return;
         } else {
             posicionadorVeiculos += espacamento;
